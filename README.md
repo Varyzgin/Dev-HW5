@@ -1,4 +1,4 @@
-Login form, NotificationServer, Singleton, Dictionaties, Frames, Tags, ColorSchemes, DynamicFonts
+Login form, Password check, NotificationServer, Singleton, Dictionaties, Frames, Tags, ColorSchemes, DynamicFonts
 
-![image](https://github.com/user-attachments/assets/39b2ca1f-58a9-42a1-ad9d-f7cd4fde43f9) ![image](https://github.com/user-attachments/assets/e8bd3eff-6897-47f5-908b-1bcc0076e327) ![image](https://github.com/user-attachments/assets/8ebb32fd-7b6e-4926-8b43-477390d26851)
+<img width="484" alt="image" src="https://github.com/user-attachments/assets/28fd33a5-14dd-47b7-ba44-c44caf373af4" /> <img width="484" alt="image" src="https://github.com/user-attachments/assets/8467c970-a3b6-4d1a-982f-56a3016d6b40" /> <img width="484" alt="image" src="https://github.com/user-attachments/assets/6953b505-a3ed-4d5f-91c5-f8a971cf5ed2" />
 

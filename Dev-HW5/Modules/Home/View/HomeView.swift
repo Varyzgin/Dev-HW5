@@ -8,17 +8,10 @@
 import UIKit
 
 final class HomeViewController: UIViewController {
+    private var user : [UserFields: String?] = [:]
     public func configure(userData: [UserFields: String?]?) {
         if let userData = userData {
-            if let text = userData[.nickname] {
-                greetingsLabel.text = "Hello, \(text!)!"
-            }
-            if let text = userData[.email] {
-                emailLabel.text = "Email: \(text!)"
-            }
-            if let text = userData[.password] {
-                passwordLabel.text = "Password: \(text!)"
-            }
+            self.user = userData
         }
     }
     
@@ -88,7 +81,15 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        greetingsLabel.text = "Placeholder"//\(userData[.nickname]!)!"
+        if let text = user[.nickname] {
+            greetingsLabel.text = "Hello, \(text!)!"
+        }
+        if let text = user[.email] {
+            emailLabel.text = "Email: \(text!)"
+        }
+        if let text = user[.password] {
+            passwordLabel.text = "Password: \(text!)"
+        }
         view.backgroundColor = .secondarySystemBackground
         view.addSubviews(greetingsLabel, emailLabel, passwordLabel, exitButton)
     }

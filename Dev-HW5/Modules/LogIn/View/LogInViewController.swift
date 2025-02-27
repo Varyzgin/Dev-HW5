@@ -29,7 +29,7 @@ final class LogInViewController: UIViewController {
         size: CGSize(width: view.frame.width - Margins.M * 2, height: 50)
     )))
     private lazy var emailTextField: UITextField = {
-        $0.placeholder = "Email"
+        $0.placeholder = "Почта или логин"
         $0.font = DynamicFont.set(textStyle: .body)
         return $0
     }(UITextField(frame: CGRect(

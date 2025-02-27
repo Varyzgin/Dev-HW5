@@ -5,7 +5,6 @@
 //  Created by Дима on 2/20/25.
 //
 
-
 enum Pages: Hashable {
     case ToHome, ToLogin, ToRegistration
 }

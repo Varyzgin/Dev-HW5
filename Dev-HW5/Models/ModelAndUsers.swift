@@ -13,12 +13,24 @@ enum UserFields: Hashable {
     case nickname, name, email, password
 }
 
+enum ButtonTypes {
+    case primary, secondary, danger
+}
+
+enum RegisterStatus {
+    case ok, existNickname, existEmail
+}
+
+enum AuthorizationStatus {
+    case ok, wrongPassword, wrongEmail
+}
+
 struct User {
-    let nickname: String
-    let name: String? = nil
-//    let phone: String?
-    let email: String
-    let password: String
+    var nickname: String
+    var name: String? = nil
+//    var phone: String?
+    var email: String
+    var password: String
 }
 class UsersManager {
     nonisolated(unsafe) public static let shared = UsersManager()
@@ -28,14 +40,16 @@ class UsersManager {
 //    private var phoneKey: [String: String] = [:]
 
     
-    func add(nickname: String, email: String, password: String) -> Bool {
-        if users[nickname] != nil || emailDict[email] != nil {
-            return false
+    func add(user: User) -> RegisterStatus {
+        if users[user.nickname] != nil {
+            return .existNickname
+        } else if emailDict[user.email] != nil {
+            return .existEmail
         }
-        users[nickname] = User(nickname: nickname, email: email, password: password)
-        emailDict[email] = nickname
+        users[user.nickname] = user
+        emailDict[user.email] = user.nickname
         
-        return true
+        return .ok
     }
     
     func find(login: String, password: String) -> User? {

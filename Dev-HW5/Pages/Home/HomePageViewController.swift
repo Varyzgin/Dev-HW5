@@ -7,15 +7,16 @@
 
 import UIKit
 
-final class HomeViewController: UIViewController {
-    private var user : [UserFields: String?] = [:]
-    public func configure(userData: [UserFields: String?]?) {
-        if let userData = userData {
-            self.user = userData
-        }
-    }
+protocol HomeViewControllerProtocol: AnyObject {
+    var greetingsLabel : UILabel { get set }
+    var emailLabel : UILabel { get set }
+    var passwordLabel : UILabel { get set }
+}
+
+final class HomeViewController: UIViewController, HomeViewControllerProtocol {
+    public var presenter : HomePresenterProtocol!
     
-    private lazy var greetingsLabel: UILabel = {
+    internal lazy var greetingsLabel: UILabel = {
 //        $0.text = "Hello"//, \(userData[.nickname]!)!"
 
         $0.numberOfLines = 0
@@ -45,7 +46,7 @@ final class HomeViewController: UIViewController {
     )
     ))
     
-    private lazy var emailLabel: UILabel = {
+    internal lazy var emailLabel: UILabel = {
         $0.textColor = .text
         $0.font = DynamicFont.set(textStyle: .body)
         return $0
@@ -54,7 +55,7 @@ final class HomeViewController: UIViewController {
         size: CGSize(width: view.frame.width - Margins.M * 2, height: 25)
     )))
     
-    private lazy var passwordLabel: UILabel = {
+    internal lazy var passwordLabel: UILabel = {
         $0.textColor = .text
         $0.font = DynamicFont.set(textStyle: .body)
         return $0
@@ -62,36 +63,19 @@ final class HomeViewController: UIViewController {
         origin: CGPoint(x: Margins.M, y: emailLabel.frame.maxY + Margins.S),
         size: CGSize(width: view.frame.width - Margins.M * 2, height: 25)
     )))
-
-    @objc private func buttonPressed(sender: UIButton) {
-        NotificationCenter.default.post(name: NSNotification.Name("WindowManager"), object: Pages.ToLogin)
-    }
     
-    private lazy var exitButton: UIButton = {
-        $0.tag = 2
-        $0.setTitle("Выход из аккаунта", for: .normal)
-        $0.setTitleColor(.systemRed, for: .normal)
-        $0.layer.cornerRadius = 15
-        $0.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        return $0
-    }(UIButton(frame: CGRect(
+    private lazy var exitButton = BaseButton(tag: 1, text: "Выход из аккаунта", frame: CGRect(
         origin: CGPoint(x: Margins.M + 45, y: view.frame.maxY - 100),
         size: CGSize(width: view.frame.width - 2 * (Margins.M + 45), height: 50)
-    )))
+    ), buttonType: .danger, action: UIAction { _ in  self.presenter.changePage() } )
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let text = user[.nickname] {
-            greetingsLabel.text = "Hello, \(text!)!"
-        }
-        if let text = user[.email] {
-            emailLabel.text = "Email: \(text!)"
-        }
-        if let text = user[.password] {
-            passwordLabel.text = "Password: \(text!)"
-        }
+        greetingsLabel.text = "!"
+        emailLabel.text = "!"
+        passwordLabel.text = "!"
+
         view.backgroundColor = .secondarySystemBackground
         view.addSubviews(greetingsLabel, emailLabel, passwordLabel, exitButton)
     }
 }
-

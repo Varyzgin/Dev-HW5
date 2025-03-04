@@ -18,28 +18,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = LogInViewController()
+        window?.rootViewController = Builder.makeLogInPage()
         window?.makeKeyAndVisible()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(windowManager), name: Notification.Name("WindowManager"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(windowManager), name: Notification.Name.WindowManager, object: nil)
     }
     
     @objc func windowManager(notification: Notification) {
-        var vc: UIViewController = UIViewController()
         let pageDestination = notification.object as? Pages
         let user = notification.userInfo as? [UserFields: String?]
 
-        switch pageDestination {
-        case .ToHome:
-            let homeVC = HomeViewController()
-            homeVC.configure(userData: user)
-            vc = homeVC
-        case .ToLogin:
-            vc = LogInViewController()
-        case .ToRegistration:
-            vc = RegistrationViewController()
-        case .none:
-            print("Error in page switching")
+        let vc = switch pageDestination {
+        case .ToHome: Builder.makeHomePage(user: user)
+        case .ToLogin: Builder.makeLogInPage()
+        case .ToRegistration: Builder.makeRegistrationPage()
+        case .none: UIViewController()
         }
 
         self.window?.rootViewController = vc

@@ -72,16 +72,15 @@ final class HomeViewController: UIViewController, HomeViewControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         if let userData = self.presenter.userData {
-//            UserDefaults.standard.set(userData, forKey: UserDefaultsKeys.userData)
-            if let text = userData[.nickname] {
-                self.greetingsLabel.text = "Hello, \(text!)!"
-            }
-            if let text = userData[.email] {
-                self.emailLabel.text = "Email: \(text!)"
-            }
-            if let text = userData[.password] {
-                self.passwordLabel.text = "Password: \(text!)"
-            }
+            //            if let text = userData.nickname {
+            self.greetingsLabel.text = "Hello, \(userData.nickname)!"
+            //            }
+            //            if let text = userData.email {
+            self.emailLabel.text = "Email: \(userData.email)"
+            //            }
+            //            if let text = userData.password {
+            self.passwordLabel.text = "Password: \(userData.password)"
+        //}
         }
 
         view.backgroundColor = .secondarySystemBackground

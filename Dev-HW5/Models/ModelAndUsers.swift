@@ -5,12 +5,8 @@
 //  Created by Дима on 2/20/25.
 //
 
-enum Pages: Hashable {
+enum Pages {
     case ToHome, ToLogin, ToRegistration
-}
-
-enum UserFields: Hashable {
-    case nickname, name, email, password
 }
 
 enum ButtonTypes {
@@ -25,6 +21,10 @@ enum AuthorizationStatus {
     case ok, wrongPassword, wrongEmail
 }
 
+enum UserInfoKeys: Hashable {
+    case destinationPage, user
+}
+
 struct User {
     var nickname: String
     var name: String? = nil
@@ -32,6 +32,7 @@ struct User {
     var email: String
     var password: String
 }
+// User = [UserFields: String?]
 class UsersManager {
     nonisolated(unsafe) public static let shared = UsersManager()
     

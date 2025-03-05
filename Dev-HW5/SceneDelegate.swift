@@ -19,20 +19,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.rootViewController = Builder.makeLogInPage()
+//        window?.rootViewController = if UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLogin) {
+//            Builder.makeLogInPage()
+//        } else {
+//            Builder.makeHomePage(user: UserDefaults.standard.object(forKey: UserDefaultsKeys.userData) as? [UserFields : String?])
+//        }
+        
         window?.makeKeyAndVisible()
         
         NotificationCenter.default.addObserver(self, selector: #selector(windowManager), name: Notification.Name.WindowManager, object: nil)
     }
     
     @objc func windowManager(notification: Notification) {
-        let pageDestination = notification.object as? Pages
-        let user = notification.userInfo as? [UserFields: String?]
-
-        let vc = switch pageDestination {
-        case .ToHome: Builder.makeHomePage(user: user)
-        case .ToLogin: Builder.makeLogInPage()
-        case .ToRegistration: Builder.makeRegistrationPage()
-        case .none: UIViewController()
+        let userInfo = notification.userInfo as? [UserInfoKeys: Any]
+        
+        var vc = UIViewController()
+        if let page = userInfo?[.destinationPage] as? Pages {
+            switch page {
+            case .ToHome:
+                if let user = userInfo?[.user] as? User {
+                    vc = Builder.makeHomePage(user: user)
+                }
+            case .ToLogin: vc = Builder.makeLogInPage()
+            case .ToRegistration: vc = Builder.makeRegistrationPage()
+            }
         }
 
         self.window?.rootViewController = vc

@@ -22,10 +22,10 @@ class Builder {
         return vc
     }
     
-    static func makeHomePage(user: [UserFields: String?]?) -> UIViewController {
+    static func makeHomePage(user: User) -> UIViewController {
         let vc = HomeViewController()
         let presenter = HomePresenter(view: vc)
-        presenter.configure(userData: user)
+        presenter.configure(user: user)
         vc.presenter = presenter
         return vc
     }

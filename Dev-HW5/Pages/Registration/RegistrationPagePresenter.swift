@@ -49,11 +49,13 @@ final class RegistrationPresenter : RegistrationPresenterProtocol {
             self.view?.emailBaseTextField.backgroundColor = .wrong
             self.view?.emailBaseTextField.textField.placeholder = "Аккаунт с этой почтой существует"
         case .ok:
-            NotificationCenter.default.post(name: Notification.Name.WindowManager, object: Pages.ToLogin)
+            let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToLogin]
+            NotificationCenter.default.post(name: Notification.Name.WindowManager, object: self, userInfo: userInfo)
         }
     }
     
     internal func changePage() {
-        NotificationCenter.default.post(name: Notification.Name.WindowManager, object: Pages.ToLogin)
+        let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToLogin]
+        NotificationCenter.default.post(name: Notification.Name.WindowManager, object: self, userInfo: userInfo)
     }
 }

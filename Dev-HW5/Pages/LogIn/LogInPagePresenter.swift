@@ -34,8 +34,12 @@ final class LogInPresenter: LogInPresenterProtocol {
         if flag { return }
     
         if let user = UsersManager.shared.find(login: login, password: password) {
-            let userData: [UserFields: String?] = [.nickname: user.nickname, .email: user.email, .password: user.password, .name: user.name]
-            NotificationCenter.default.post(name: Notification.Name.WindowManager, object: Pages.ToHome, userInfo: userData as [AnyHashable : Any])
+            let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToHome, .user: user]//, .password: password]
+            
+//            UserDefaults.standard.set(true, forKey: UserDefaultsKeys.isLogin)
+//            UserDefaults.standard.set(userData, forKey: UserDefaultsKeys.userData)
+
+            NotificationCenter.default.post(name: Notification.Name.WindowManager, object: self, userInfo: userInfo)
         } else {
             self.view?.loginBaseTextField.backgroundColor = .wrong
             self.view?.passwordBaseTextField.backgroundColor = .wrong
@@ -43,7 +47,8 @@ final class LogInPresenter: LogInPresenterProtocol {
     }
     
     internal func changePage() {
-        NotificationCenter.default.post(name: Notification.Name.WindowManager, object: Pages.ToRegistration)
+        let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToRegistration]
+        NotificationCenter.default.post(name: Notification.Name.WindowManager, object: self, userInfo: userInfo)
     }
     
     init(view: LogInViewControllerProtocol?) {

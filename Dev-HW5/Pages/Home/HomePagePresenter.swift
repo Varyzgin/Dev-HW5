@@ -8,30 +8,22 @@
 import Foundation
 
 protocol HomePresenterProtocol: AnyObject {
+    var userData : [UserFields: String?]? { get }
     func changePage()
 }
 
 final class HomePresenter: HomePresenterProtocol {
     private weak var view: HomeViewControllerProtocol?
+    internal var userData: [UserFields: String?]?
     init(view: HomeViewControllerProtocol) {
         self.view = view
     }
-    
     internal func changePage() {
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userData)
         NotificationCenter.default.post(name: Notification.Name.WindowManager, object: Pages.ToLogin)
     }
     
     public func configure(userData: [UserFields: String?]?) {
-        if let userData = userData {
-            if let text = userData[.nickname] {
-                self.view?.greetingsLabel.text = "Hello, \(text!)!"
-            }
-            if let text = userData[.email] {
-                self.view?.emailLabel.text = "Email: \(text!)"
-            }
-            if let text = userData[.password] {
-                self.view?.passwordLabel.text = "Password: \(text!)"
-            }
-        }
+        self.userData = userData
     }
 }

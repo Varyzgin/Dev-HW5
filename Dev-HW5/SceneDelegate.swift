@@ -18,12 +18,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = Builder.makeLogInPage()
-//        window?.rootViewController = if UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLogin) {
-//            Builder.makeLogInPage()
-//        } else {
-//            Builder.makeHomePage(user: UserDefaults.standard.object(forKey: UserDefaultsKeys.userData) as? [UserFields : String?])
-//        }
+
+        if let userDict = UserDefaults.standard.object(forKey: UserInfoKeys.user.rawValue) as? [String: String] {
+            if let user = User.fromDictionary(userDict) {
+                window?.rootViewController = Builder.makeHomePage(user: user)
+            } else { window?.rootViewController = Builder.makeLogInPage() }
+        } else { window?.rootViewController = Builder.makeLogInPage() }
         
         window?.makeKeyAndVisible()
         

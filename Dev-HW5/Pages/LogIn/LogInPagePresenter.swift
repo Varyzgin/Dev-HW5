@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import KeychainSwift
 
 protocol LogInPresenterProtocol : AnyObject {
     func login()
@@ -14,6 +15,7 @@ protocol LogInPresenterProtocol : AnyObject {
 
 final class LogInPresenter: LogInPresenterProtocol {
     private weak var view: LogInViewControllerProtocol?
+    private let keychain = KeychainSwift()
     
     internal func login() {
         var flag: Bool = false
@@ -33,11 +35,14 @@ final class LogInPresenter: LogInPresenterProtocol {
         }
         if flag { return }
     
-        if let user = UsersManager.shared.find(login: login, password: password) {
-            let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToHome, .user: user]//, .password: password]
+        if var user = UsersManager.shared.find(login: login, password: password) {
+            keychain.set(password, forKey: "password")
             
-//            UserDefaults.standard.set(true, forKey: UserDefaultsKeys.isLogin)
-//            UserDefaults.standard.set(userData, forKey: UserDefaultsKeys.userData)
+            user.password = ""
+            let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToHome, .user: user]
+            
+            let userDict = user.toDictionary()
+            UserDefaults.standard.set(userDict, forKey: UserInfoKeys.user.rawValue)
 
             NotificationCenter.default.post(name: Notification.Name.WindowManager, object: self, userInfo: userInfo)
         } else {

@@ -8,6 +8,8 @@
 import UIKit
 
 protocol RegistrationViewControllerProtocol : AnyObject {
+    func showImagePickerController()
+    var imageView: UIImageView { get set }
     var nicknameBaseTextField: BaseTextField { get set }
     var emailBaseTextField: BaseTextField { get set }
     var passwordBaseTextField: BaseTextField { get set }
@@ -18,18 +20,35 @@ final class RegistrationViewController: UIViewController, RegistrationViewContro
     
     private lazy var pageNameLabel: UILabel = {
         $0.text = "Регистрация"
-        $0.textAlignment = .center
         $0.textColor = .text
         $0.font = DynamicFont.set(textStyle: .largeTitle, trait: .traitBold)
         return $0
     }(UILabel(
         frame: CGRect(
-        origin: CGPoint(x: Margins.M, y: 44 + 100 + Margins.M),
+        origin: CGPoint(x: Margins.M, y: 44 + Margins.M),
         size: CGSize(width: view.frame.width - Margins.M * 2, height: 45)
     )))
     
+    @objc private func chooseImage() {
+        presenter.choosePhoto()
+    }
+    
+    internal lazy var imageView: UIImageView = {
+        $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
+        $0.backgroundColor = .wrong
+        $0.layer.cornerRadius = 20
+        $0.image = UIImage(systemName: "plus.app")
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(chooseImage)))
+        return $0
+    }(UIImageView(frame: CGRect(
+        origin: CGPoint(x: view.frame.midX - 100, y: pageNameLabel.frame.maxY + Margins.M),
+        size: CGSize(width: 200, height: 200)
+    )))
+    
     internal lazy var nicknameBaseTextField = BaseTextField(placeholderText: "Nickname", frame: CGRect(
-        origin: CGPoint(x: Margins.M, y: pageNameLabel.frame.maxY + 2 * Margins.M),
+        origin: CGPoint(x: Margins.M, y: imageView.frame.maxY + 2 * Margins.M),
         size: CGSize(width: view.frame.width - Margins.M * 2, height: 50)
     ))
     
@@ -56,6 +75,19 @@ final class RegistrationViewController: UIViewController, RegistrationViewContro
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
-        view.addSubviews(pageNameLabel, nicknameBaseTextField, emailBaseTextField, passwordBaseTextField, registerButton, loginButton)
+        view.addSubviews(pageNameLabel, imageView, nicknameBaseTextField, emailBaseTextField, passwordBaseTextField, registerButton, loginButton)
+    }
+}
+
+extension RegistrationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func showImagePickerController() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imageView.image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+        dismiss(animated: true)
     }
 }

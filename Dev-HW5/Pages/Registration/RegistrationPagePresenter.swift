@@ -10,6 +10,7 @@ import Foundation
 protocol RegistrationPresenterProtocol : AnyObject {
     func register()
     func changePage()
+    func choosePhoto()
 }
 
 final class RegistrationPresenter : RegistrationPresenterProtocol {
@@ -18,9 +19,10 @@ final class RegistrationPresenter : RegistrationPresenterProtocol {
         self.view = view
     }
     
+    private var user: User = User(nickname: "", email: "", password: "")
+    
     internal func register() {
         var flag: Bool = false
-        var user = User(nickname: "", email: "", password: "")
         if let nickname = self.view?.nicknameBaseTextField.textField.text, !nickname.isEmpty {
             user.nickname = nickname
         } else {
@@ -41,7 +43,9 @@ final class RegistrationPresenter : RegistrationPresenterProtocol {
         }
         if flag { return }
         
-        switch UsersManager.shared.add(user: user) {
+        let picture = self.view?.imageView.image?.jpegData(compressionQuality: 1)
+        
+        switch UsersManager.shared.add(user: user, photo: picture) {
         case .existNickname:
             self.view?.nicknameBaseTextField.backgroundColor = .wrong
             self.view?.nicknameBaseTextField.textField.placeholder = "Аккаунт с этим именем существует"
@@ -57,5 +61,9 @@ final class RegistrationPresenter : RegistrationPresenterProtocol {
     internal func changePage() {
         let userInfo: [UserInfoKeys: Any] = [.destinationPage: Pages.ToLogin]
         NotificationCenter.default.post(name: Notification.Name.WindowManager, object: self, userInfo: userInfo)
+    }
+    
+    internal func choosePhoto() {
+        self.view?.showImagePickerController()
     }
 }

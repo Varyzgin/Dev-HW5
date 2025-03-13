@@ -25,10 +25,10 @@ enum UserInfoKeys: String, Hashable {
     case destinationPage, user
 }
 
-struct User {
+struct User: Codable {
     var nickname: String
-    var name: String? = nil
-//    var phone: String?
+    var name: String?
+    var photoPath: String?
     var email: String
     var password: String
     
@@ -40,6 +40,9 @@ struct User {
         if let name = name {
             dict["name"] = name
         }
+        if let photoPath = photoPath {
+            dict["photoPath"] = photoPath
+        }
         return dict
     }
     static func fromDictionary(_ dict: [String: String]) -> User? {
@@ -49,6 +52,6 @@ struct User {
               let password = dict["password"] else {
             return nil
         }
-        return User(nickname: nickname, name: dict["name"], email: email, password: password)
+        return User(nickname: nickname, name: dict["name"], photoPath: dict["photoPath"], email: email, password: password)
     }
 }

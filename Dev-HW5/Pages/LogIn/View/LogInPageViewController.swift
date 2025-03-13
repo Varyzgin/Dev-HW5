@@ -17,7 +17,6 @@ final class LogInViewController: UIViewController, LogInViewControllerProtocol {
     
     private lazy var pageNameLabel: UILabel = {
         $0.text = "Авторизация"
-        $0.textAlignment = .center
         $0.textColor = .text
         $0.font = DynamicFont.set(textStyle: .largeTitle, trait: .traitBold)
         return $0

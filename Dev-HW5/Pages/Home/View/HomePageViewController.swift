@@ -9,6 +9,7 @@ import UIKit
 
 protocol HomeViewControllerProtocol: AnyObject {
     var greetingsLabel : UILabel { get set }
+    var imageView: UIImageView { get set }
     var emailLabel : UILabel { get set }
     var passwordLabel : UILabel { get set }
 }
@@ -46,12 +47,24 @@ final class HomeViewController: UIViewController, HomeViewControllerProtocol {
     )
     ))
     
+    internal lazy var imageView: UIImageView = {
+        $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
+        $0.backgroundColor = .wrong
+        $0.layer.cornerRadius = 20
+        $0.isUserInteractionEnabled = true
+        return $0
+    }(UIImageView(frame: CGRect(
+        origin: CGPoint(x: view.frame.midX - 100, y: greetingsLabel.frame.maxY + Margins.M),
+        size: CGSize(width: 200, height: 200)
+    )))
+    
     internal lazy var emailLabel: UILabel = {
         $0.textColor = .text
         $0.font = DynamicFont.set(textStyle: .body)
         return $0
     }(UILabel(frame: CGRect(
-        origin: CGPoint(x: Margins.M, y: greetingsLabel.frame.maxY + Margins.M),
+        origin: CGPoint(x: Margins.M, y: imageView.frame.maxY + Margins.M),
         size: CGSize(width: view.frame.width - Margins.M * 2, height: 25)
     )))
     
@@ -81,9 +94,13 @@ final class HomeViewController: UIViewController, HomeViewControllerProtocol {
             //            if let text = userData.password {
             self.passwordLabel.text = "Password: \(userData.password)"
         //}
+            let url = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask).first!
+            let photoURL = url.appendingPathComponent("/UsersStorage/\(userData.nickname).jpeg")
+            self.imageView.image = try? UIImage(data: Data(contentsOf: photoURL))
         }
+        
 
         view.backgroundColor = .secondarySystemBackground
-        view.addSubviews(greetingsLabel, emailLabel, passwordLabel, exitButton)
+        view.addSubviews(greetingsLabel, imageView, emailLabel, passwordLabel, exitButton)
     }
 }
